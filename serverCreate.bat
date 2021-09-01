@@ -1,6 +1,6 @@
 REM =================================================
-REM |  This file is part of MC-UtilFrag, using GPL  |
-REM |  https://github.com/Preta-Crowz/MC-UtilFrag   |
+REM =  This file is part of MC-UtilFrag, using GPL  =
+REM =  https://github.com/Preta-Crowz/MC-UtilFrag   =
 REM =================================================
 @echo off
 :main
