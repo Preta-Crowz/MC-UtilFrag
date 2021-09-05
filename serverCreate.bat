@@ -1,11 +1,12 @@
+@echo off
 REM =================================================
 REM =  This file is part of MC-UtilFrag, using GPL  =
 REM =  https://github.com/Preta-Crowz/MC-UtilFrag   =
 REM =================================================
-@echo off
 :main
 CLS
-ECHO 0:Open Github	1:Spigot	2:Forge
+ECHO 1:Spigot	2:Forge (1.12.2)
+ECHO 0:Open Github
 SET /p TYPE=Select server to install :
 
 IF %TYPE%==0 GOTO :github
@@ -14,7 +15,7 @@ IF %TYPE%==2 GOTO :forge
 GOTO :end
 
 :github
-https://github.com/Preta-Crowz/MC-UtilFrag/new/main
+START https://github.com/Preta-Crowz/MC-UtilFrag
 GOTO :main
 
 
@@ -27,22 +28,21 @@ IF NOT EXIST BuildTools.jar (
     ECHO Downloaded BuildTools.
     TIMEOUT 5
 )
-SET VER=null
-ECHO 1:1.17.1	2:1.12.2
-SET /p VERSION=Select version to install :
-IF %VERSION%==1 SET VER=1.17.1
-IF %VERSION%==2 SET VER=1.12.2
-IF %VER%==null GOTO :end
+SET /p VERSION=Select version to install (1.8.3~1.17.1) :
+curl --head https://hub.spigotmc.org/versions/%VERSION%.json | findstr HTTP/ > %temp%\VerCheck.txt
+SET /P CHECK=<%temp%\VerCheck.txt
+DEL %temp%\VerCheck.txt
+IF "%CHECK%"=="HTTP/1.1 404 Not Found" GOTO :vererror
 CLS
 ECHO Start compile.
-java -jar BuildTools.jar --rev %VER%
+java -jar BuildTools.jar --rev %VERSION%
 ECHO Compile done.
-TIMEOUT 5
 GOTO :end
 
 
 
 :forge
+REM todo : support more versions of forge server
 IF NOT EXIST ForgeInstall.jar (
     CLS
     ECHO ForgeInstall not found! Downloading new one..
@@ -51,7 +51,12 @@ IF NOT EXIST ForgeInstall.jar (
     TIMEOUT 5
 )
 java -jar ForgeInstall.jar --installServer
+ECHO Install done.
+GOTO :end
 
+
+:vererror
+ECHO Invalid version.
 :end
 ECHO Task done. Exiting..
 PAUSE
